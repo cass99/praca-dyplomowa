@@ -16,6 +16,9 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\ManyToOne(targetEntity: Room::class, inversedBy: 'user')]
+    private ?Room $room = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -31,5 +34,29 @@ class User
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getRoom(): ?Room
+    {
+        return $this->room;
+    }
+
+    public function setRoom(?Room $room): self
+    {
+        $this->room = $room;
+
+        return $this;
+    }
+
+    public function getUserData(): array 
+    {
+        $room = $this->getRoom();
+        $userData[] = [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'room' => $room ? $room->getId() : null
+        ];
+
+        return $userData;
     }
 }
